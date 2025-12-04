@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Middelway Rust Server</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<header class="header">
+  <div class="logo glow">Middelway</div>
+  <nav id="navMenu">
+    <a href="index.html">Главная</a>
+    <a href="about.html">О сервере</a>
+    <a href="rules.html">Правила</a>
+    <a href="connect.html">Подключение</a>
+    <a href="contacts.html">Контакты</a>
+  </nav>
+
+  <a href="steam://connect/YOUR-IP:PORT" class="play-btn">Играть</a>
+  <div class="burger" onclick="toggleMenu()">☰</div>
+</header>
+
+<section class="server-info">
+    <div class="info-line">
+        <span class="info-title">Вайп:</span>
+        <span class="info-value">Сегодня</span>
+    </div>
+
+    <div class="info-line">
+        <span class="info-title">Следующий вайп:</span>
+        <span class="info-value">в пятницу</span>
+    </div>
+
+    <div class="info-line">
+        <span class="info-title">Рейт:</span>
+        <span class="info-value">x2</span>
+    </div>
+
+    <div class="info-line">
+        <span class="info-title">Карта:</span>
+        <span class="info-value">Procedural 3500</span>
+    </div>
+</section>
+
+<section class="top-stats">
+    <h2>Топ игроков</h2>
+
+    <div class="tops-container">
+
+        <div class="top-card">
+            <h3>⚔️ Топ по киллам</h3>
+            <ul id="top-kills">
+                <li>Загрузка...</li>
+            </ul>
+        </div>
+
+        <div class="top-card">
+            <h3>⛏️ Топ по фарму</h3>
+            <ul id="top-farm">
+                <li>Загрузка...</li>
+            </ul>
+        </div>
+
+        <div class="top-card">
+            <h3>💣 Топ по рейдам</h3>
+            <ul id="top-raids">
+                <li>Загрузка...</li>
+            </ul>
+        </div>
+
+    </div>
+</section>
+
+<section id="home" class="hero">
+  <div class="hero-overlay"></div>
+</section>
+
+<script>
+function toggleMenu() {
+    const menu = document.getElementById("navMenu");
+    menu.style.display = menu.style.display === "flex" ? "none" : "flex";
+}
+
+function loadTopStats() {
+    const kills = [
+        "1. Shadow — 152 убийств",
+        "2. Rager — 140 убийств",
+        "3. DEDINSIDE — 118 убийств"
+    ];
+
+    const farm = [
+        "1. Hentai — 1М ресурсов",
+        "2. WoodMan — 180k ресурсов",
+        "3. Farmlord — 160k ресурсов"
+    ];
+
+    const raids = [
+        "1. BoomMaster — 22 рейда",
+        "2. C4King — 19 рейдов",
+        "3. RAIDR — 17 рейдов"
+    ];
+
+    document.getElementById("top-kills").innerHTML =
+        kills.map(i => `<li>${i}</li>`).join("");
+
+    document.getElementById("top-farm").innerHTML =
+        farm.map(i => `<li>${i}</li>`).join("");
+
+    document.getElementById("top-raids").innerHTML =
+        raids.map(i => `<li>${i}</li>`).join("");
+}
+
+loadTopStats();
+
+document.getElementById("server-online").textContent = "54 / 100";
+</script>
+
+</body>
+</html>
