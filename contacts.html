@@ -74,6 +74,7 @@ body::before {
     margin-left: 20px;
     transition: 0.3s;
     box-shadow: 0 0 25px #ff00ff;
+    cursor: pointer;
 }
 
 .play-btn:hover {
@@ -164,10 +165,17 @@ body::before {
 </style>
 
 <script>
+
 function toggleMenu() {
     const menu = document.getElementById("navMenu");
     menu.style.display = menu.style.display === "flex" ? "none" : "flex";
 }
+
+/* КНОПКА ПОДКЛЮЧЕНИЯ К RUST */
+function playRust() {
+    window.location.href = "steam://run/252490//+connect%20195.60.166.169:28015";
+}
+
 </script>
 
 </head>
@@ -177,14 +185,14 @@ function toggleMenu() {
     <div class="logo">Middelway</div>
 
     <nav id="navMenu">
-    <a href="index.html">Главная</a>
-    <a href="about.html">О сервере</a>
-    <a href="rules.html">Правила</a>
-    <a href="connect.html">Подключение</a>
-    <a href="contacts.html">Контакты</a>
-</nav>
+        <a href="index.html">Главная</a>
+        <a href="about.html">О сервере</a>
+        <a href="rules.html">Правила</a>
+        <a href="connect.html">Подключение</a>
+        <a href="contacts.html">Контакты</a>
+    </nav>
 
-    <a href="steam://connect/YOUR-IP:PORT" class="play-btn">Играть</a>
+    <a onclick="playRust()" class="play-btn">Играть</a>
 
     <div class="burger" onclick="toggleMenu()">☰</div>
 </header>
