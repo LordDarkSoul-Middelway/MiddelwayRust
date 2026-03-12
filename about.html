@@ -6,7 +6,6 @@
 <title>О сервере — Middelway Rust</title>
 
 <style>
-
 * {
     margin: 0;
     padding: 0;
@@ -71,6 +70,9 @@ body::before {
     margin-left: 20px;
     transition: 0.3s;
     box-shadow: 0 0 25px #ff00ff;
+    cursor: pointer;
+    border: none;
+    display: inline-block;
 }
 
 .play-btn:hover {
@@ -159,13 +161,16 @@ body::before {
     #navMenu { display: none; }
     .burger { display: block; }
 }
-
 </style>
 
 <script>
 function toggleMenu() {
     const menu = document.getElementById("navMenu");
     menu.style.display = menu.style.display === "flex" ? "none" : "flex";
+}
+
+function playRust() {
+    window.location.href = "steam://run/252490//+connect%20195.60.166.169:28015";
 }
 </script>
 
@@ -176,14 +181,14 @@ function toggleMenu() {
     <div class="logo">Middelway</div>
 
     <nav id="navMenu">
-    <a href="index.html">Главная</a>
-    <a href="about.html">О сервере</a>
-    <a href="rules.html">Правила</a>
-    <a href="connect.html">Подключение</a>
-    <a href="contacts.html">Контакты</a>
-</nav>
+        <a href="index.html">Главная</a>
+        <a href="about.html">О сервере</a>
+        <a href="rules.html">Правила</a>
+        <a href="connect.html">Подключение</a>
+        <a href="contacts.html">Контакты</a>
+    </nav>
 
-    <a href="steam://connect/YOUR-IP:PORT" class="play-btn">Играть</a>
+    <a onclick="playRust()" class="play-btn">Играть</a>
 
     <div class="burger" onclick="toggleMenu()">☰</div>
 </header>
@@ -195,8 +200,7 @@ function toggleMenu() {
 <div class="content">
     <h2>Что такое Middelway Rust?</h2>
     <p>
-        Middelway — это уникальный Rust-сервер с неоновой атмосферой, улучшенным PvP, оптимизированными настройками
-        и дружным комьюнити. Мы создаём игровой опыт, который сочетает стиль, производительность и честный игровой баланс.
+        Middelway — это уникальный Rust-сервер
     </p>
 
     <p>
@@ -209,18 +213,18 @@ function toggleMenu() {
     <div class="features">
 
         <div class="card">
-            <h3>⚡ FPS-оптимизация</h3>
-            <p>Сервер настроен для высокой производительности даже на слабом ПК.</p>
+            <h3>⚡ Ванилла+</h3>
+            <p>Ванилный сервер с доп плагинами для улучшения игрового процеса.</p>
         </div>
 
         <div class="card">
-            <h3>🔥 Честное PvP</h3>
-            <p>Нет Pay-to-Win. Баланс соблюдается строго.</p>
+            <h3>🔥 Честное Развитие</h3>
+            <p>Нет Pay-to-Win так как нет магазина с донатом но если поддержать сервер то можно получить вип.</p>
         </div>
 
         <div class="card">
-            <h3>🌙 Неоновая стилистика</h3>
-            <p>Уникальный визуальный стиль неона и фиолета.</p>
+            <h3>🛡️ Активная администрация</h3>
+            <p>Админы следят за сервером 24/7 и быстро реагируют на читеров и нарушения.</p>
         </div>
 
         <div class="card">
