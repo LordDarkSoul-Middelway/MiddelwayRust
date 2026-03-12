@@ -10,6 +10,7 @@
 
 <header class="header">
   <div class="logo glow">Middelway</div>
+
   <nav id="navMenu">
     <a href="index.html">Главная</a>
     <a href="about.html">О сервере</a>
@@ -18,19 +19,20 @@
     <a href="contacts.html">Контакты</a>
   </nav>
 
-  <a href="steam://connect/YOUR-IP:PORT" class="play-btn">Играть</a>
+  <a onclick="playRust()" class="play-btn">Играть</a>
+
   <div class="burger" onclick="toggleMenu()">☰</div>
 </header>
 
 <section class="server-info">
     <div class="info-line">
         <span class="info-title">Вайп:</span>
-        <span class="info-value">Сегодня</span>
+        <span class="info-value">Каждую пятницу</span>
     </div>
 
     <div class="info-line">
         <span class="info-title">Следующий вайп:</span>
-        <span class="info-value">в пятницу</span>
+        <span class="info-value" id="wipe-timer">Загрузка...</span>
     </div>
 
     <div class="info-line">
@@ -42,6 +44,56 @@
         <span class="info-title">Карта:</span>
         <span class="info-value">Procedural 3500</span>
     </div>
+</section>
+
+<section class="news-section">
+    <h2>Новости сервера</h2>
+
+    <div class="news-container">
+
+        <div class="news-card">
+            <h3>🔥 Последний вайп</h3>
+            <p>
+                На сервере прошёл свежий вайп. Игроков ждёт новый старт, обновлённая карта и честная борьба с первых минут.
+            </p>
+        </div>
+
+        <div class="news-card">
+            <h3>⚡ Обновления Middelway</h3>
+            <p>
+                Мы продолжаем улучшать стабильность сервера, баланс и удобство игры. Следи за новостями, чтобы ничего не пропустить.
+            </p>
+        </div>
+
+        <div class="news-card">
+            <h3>📢 Важно</h3>
+            <p>
+                Не забывай читать правила сервера и заходить в Discord, чтобы быть в курсе всех изменений, ивентов и объявлений.
+            </p>
+        </div>
+
+    </div>
+</section>
+
+<section class="donate-goal">
+    <h2>Поддержка сервера</h2>
+
+    <div class="donate-card">
+        <div class="donate-text">
+            <span id="donate-current">100</span> ₽ из
+            <span id="donate-goal">1000</span> ₽
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progress-fill"></div>
+        </div>
+
+        <div class="progress-percent" id="progress-percent">0%</div>
+    </div>
+</section>
+
+<section id="home" class="hero">
+  <div class="hero-overlay"></div>
 </section>
 
 <section class="top-stats">
@@ -73,16 +125,67 @@
     </div>
 </section>
 
-<section id="home" class="hero">
-  <div class="hero-overlay"></div>
-</section>
-
 <script>
 function toggleMenu() {
     const menu = document.getElementById("navMenu");
     menu.style.display = menu.style.display === "flex" ? "none" : "flex";
 }
 
+/* ФУНКЦИЯ ПОДКЛЮЧЕНИЯ К RUST */
+function playRust() {
+    window.location.href = "steam://run/252490//+connect%20195.60.166.169:28015";
+}
+
+/* АВТОМАТИЧЕСКИЙ ВАЙП КАЖДУЮ ПЯТНИЦУ */
+function getNextWipeDate() {
+    const now = new Date();
+
+    const wipeDay = 5;
+    const wipeHour = 15;
+    const wipeMinute = 0;
+    const wipeSecond = 0;
+
+    let next = new Date(now);
+    let daysUntil = wipeDay - now.getDay();
+
+    if (daysUntil < 0) {
+        daysUntil += 7;
+    }
+
+    next.setDate(now.getDate() + daysUntil);
+    next.setHours(wipeHour, wipeMinute, wipeSecond, 0);
+
+    if (next <= now) {
+        next.setDate(next.getDate() + 7);
+    }
+
+    return next;
+}
+
+function updateWipeTimer() {
+    const wipeTimerEl = document.getElementById("wipe-timer");
+    const now = new Date();
+    const nextWipe = getNextWipeDate();
+    const diff = nextWipe - now;
+
+    if (diff <= 0) {
+        wipeTimerEl.textContent = "Вайп!";
+        return;
+    }
+
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const minutes = Math.floor((diff / (1000 * 60)) % 60);
+    const seconds = Math.floor((diff / (1000) % 60));
+
+    if (days >= 1) {
+        wipeTimerEl.textContent = `${days} дн.`;
+    } else {
+        wipeTimerEl.textContent = `${hours}ч ${minutes}м ${seconds}с`;
+    }
+}
+
+/* ТОП СТАТИСТИКА */
 function loadTopStats() {
     const kills = [
         "1. Shadow — 152 убийств",
@@ -112,9 +215,27 @@ function loadTopStats() {
         raids.map(i => `<li>${i}</li>`).join("");
 }
 
-loadTopStats();
+/* ПРОГРЕСС ПОДДЕРЖКИ */
+function updateDonateProgress(current, goal) {
+    const currentEl = document.getElementById("donate-current");
+    const goalEl = document.getElementById("donate-goal");
+    const fillEl = document.getElementById("progress-fill");
+    const percentEl = document.getElementById("progress-percent");
 
-document.getElementById("server-online").textContent = "54 / 100";
+    const percent = Math.min((current / goal) * 100, 100);
+
+    currentEl.textContent = current;
+    goalEl.textContent = goal;
+    fillEl.style.width = percent + "%";
+    percentEl.textContent = Math.round(percent) + "%";
+}
+
+loadTopStats();
+updateWipeTimer();
+setInterval(updateWipeTimer, 1000);
+
+/* Тут меняешь суммы */
+updateDonateProgress(0, 1000);
 </script>
 
 </body>
