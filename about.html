@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>О сервере — Middelway Rust</title>
+<link rel="stylesheet" href="style.css" />
+<style>
+.hero {
+    height: 40vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: transparent;
+    margin-top: 80px;
+}
+.header-right { display: flex; align-items: center; gap: 10px; }
+.content {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 20px;
+    background: rgba(60,0,90,0.25);
+    border-radius: 20px;
+    backdrop-filter: blur(6px);
+    border: 1px solid rgba(255,0,255,0.3);
+    box-shadow: 0 0 30px #b400ff;
+}
+.content h2 { font-size: 32px; margin-bottom: 15px; text-shadow: 0 0 18px #ff00ff; }
+.content p { font-size: 18px; line-height: 1.6; margin-bottom: 18px; }
+.features { display: flex; gap: 25px; justify-content: center; margin-top: 40px; flex-wrap: wrap; }
+.card {
+    width: 260px; padding: 20px;
+    background: rgba(90, 0, 120, 0.3);
+    border-radius: 15px;
+    border: 1px solid rgba(255,0,255,0.25);
+    text-align: center;
+    box-shadow: 0 0 20px #b400ff;
+    transition: 0.3s;
+}
+.card:hover { box-shadow: 0 0 35px #ff00ff; transform: translateY(-5px); }
+.card h3 { font-size: 22px; margin-bottom: 10px; text-shadow: 0 0 12px #ff00ff; }
+.card p { font-size: 17px; }
+</style>
+</head>
+<body>
+
+<header class="header">
+    <div class="logo">Middelway</div>
+    <nav id="navMenu">
+        <a href="index.html" id="nav-home">Главная</a>
+        <a href="about.html" id="nav-about">О сервере</a>
+        <a href="rules.html" id="nav-rules">Правила</a>
+        <a href="connect.html" id="nav-connect">Подключение</a>
+        <a href="contacts.html" id="nav-contacts">Контакты</a>
+    </nav>
+    <div class="header-right">
+        <div class="lang-dropdown">
+            <button class="lang-current" onclick="toggleLangMenu()">
+                <span id="current-lang-label">RU</span>
+                <span class="lang-arrow">▼</span>
+            </button>
+            <div class="lang-menu">
+                <button class="lang-option" onclick="setLanguage('ru')">Русский</button>
+                <button class="lang-option" onclick="setLanguage('en')">English</button>
+            </div>
+        </div>
+        <a onclick="playRust()" class="play-btn" id="play-btn-text">Играть</a>
+    </div>
+    <div class="burger" onclick="toggleMenu()">☰</div>
+</header>
+
+<section class="hero">
+    <h1 id="page-title">О сервере</h1>
+</section>
+
+<div class="content">
+    <h2 id="section1-title">Что такое Middelway Rust?</h2>
+    <p id="section1-p1">Middelway — это уникальный Rust-сервер с ванильным геймплеем и дополнительными плагинами для улучшения игрового процесса. Мы ценим честную игру, активное комьюнити и регулярные вайпы, которые дают каждому равный старт.</p>
+    <p id="section1-p2">Наша команда постоянно улучшает сервер, добавляет новые функции, следит за стабильностью и делает всё, чтобы игрокам было комфортно и интересно развиваться.</p>
+    <h2 id="section2-title">Особенности сервера</h2>
+    <div class="features">
+        <div class="card"><h3 id="card1-title">⚡ Ванилла+</h3><p id="card1-text">Ванильный сервер с дополнительными плагинами для улучшения игрового процесса.</p></div>
+        <div class="card"><h3 id="card2-title">🔥 Честное Развитие</h3><p id="card2-text">Нет Pay-to-Win — нет магазина с донатом. Поддержав сервер, можно получить VIP.</p></div>
+        <div class="card"><h3 id="card3-title">🛡️ Активная администрация</h3><p id="card3-text">Админы следят за сервером 24/7 и быстро реагируют на читеров и нарушения.</p></div>
+        <div class="card"><h3 id="card4-title">📅 Регулярные вайпы</h3><p id="card4-text">Стабильный график вайпов и обновлений.</p></div>
+    </div>
+</div>
+
+<script>
+function toggleMenu() {
+    const menu = document.getElementById("navMenu");
+    menu.style.display = menu.style.display === "flex" ? "none" : "flex";
+}
+function playRust() {
+    window.location.href = "steam://run/252490//+connect%20195.60.166.169:28015";
+}
+function toggleLangMenu() {
+    document.querySelector(".lang-dropdown").classList.toggle("open");
+}
+document.addEventListener("click", function (e) {
+    const dropdown = document.querySelector(".lang-dropdown");
+    if (dropdown && !dropdown.contains(e.target)) dropdown.classList.remove("open");
+});
+
+const translations = {
+    ru: {
+        currentLang: "RU", playBtn: "Играть",
+        navHome: "Главная", navAbout: "О сервере", navRules: "Правила", navConnect: "Подключение", navContacts: "Контакты",
+        pageTitle: "О сервере",
+        section1Title: "Что такое Middelway Rust?",
+        section1p1: "Middelway — это уникальный Rust-сервер с ванильным геймплеем и дополнительными плагинами для улучшения игрового процесса. Мы ценим честную игру, активное комьюнити и регулярные вайпы, которые дают каждому равный старт.",
+        section1p2: "Наша команда постоянно улучшает сервер, добавляет новые функции, следит за стабильностью и делает всё, чтобы игрокам было комфортно и интересно развиваться.",
+        section2Title: "Особенности сервера",
+        card1Title: "⚡ Ванилла+", card1Text: "Ванильный сервер с дополнительными плагинами для улучшения игрового процесса.",
+        card2Title: "🔥 Честное Развитие", card2Text: "Нет Pay-to-Win — нет магазина с донатом. Поддержав сервер, можно получить VIP.",
+        card3Title: "🛡️ Активная администрация", card3Text: "Админы следят за сервером 24/7 и быстро реагируют на читеров и нарушения.",
+        card4Title: "📅 Регулярные вайпы", card4Text: "Стабильный график вайпов и обновлений."
+    },
+    en: {
+        currentLang: "EN", playBtn: "Play",
+        navHome: "Home", navAbout: "About", navRules: "Rules", navConnect: "Connect", navContacts: "Contacts",
+        pageTitle: "About Server",
+        section1Title: "What is Middelway Rust?",
+        section1p1: "Middelway is a unique Rust server with vanilla gameplay and additional plugins to enhance the experience. We value fair play, an active community, and regular wipes that give everyone an equal start.",
+        section1p2: "Our team constantly improves the server, adds new features, monitors stability, and does everything to make the game comfortable and exciting for all players.",
+        section2Title: "Server Features",
+        card1Title: "⚡ Vanilla+", card1Text: "Vanilla server with extra plugins to improve the gameplay experience.",
+        card2Title: "🔥 Fair Progression", card2Text: "No Pay-to-Win — no donation shop. Support the server and receive VIP status.",
+        card3Title: "🛡️ Active Admins", card3Text: "Admins monitor the server 24/7 and react quickly to cheaters and violations.",
+        card4Title: "📅 Regular Wipes", card4Text: "Stable wipe and update schedule."
+    }
+};
+
+let currentLang = localStorage.getItem("site-lang") || "ru";
+
+function setLanguage(lang) {
+    currentLang = lang;
+    localStorage.setItem("site-lang", lang);
+    const t = translations[lang];
+    document.getElementById("current-lang-label").textContent = t.currentLang;
+    document.getElementById("play-btn-text").textContent = t.playBtn;
+    document.getElementById("nav-home").textContent = t.navHome;
+    document.getElementById("nav-about").textContent = t.navAbout;
+    document.getElementById("nav-rules").textContent = t.navRules;
+    document.getElementById("nav-connect").textContent = t.navConnect;
+    document.getElementById("nav-contacts").textContent = t.navContacts;
+    document.getElementById("page-title").textContent = t.pageTitle;
+    document.getElementById("section1-title").textContent = t.section1Title;
+    document.getElementById("section1-p1").textContent = t.section1p1;
+    document.getElementById("section1-p2").textContent = t.section1p2;
+    document.getElementById("section2-title").textContent = t.section2Title;
+    document.getElementById("card1-title").textContent = t.card1Title;
+    document.getElementById("card1-text").textContent = t.card1Text;
+    document.getElementById("card2-title").textContent = t.card2Title;
+    document.getElementById("card2-text").textContent = t.card2Text;
+    document.getElementById("card3-title").textContent = t.card3Title;
+    document.getElementById("card3-text").textContent = t.card3Text;
+    document.getElementById("card4-title").textContent = t.card4Title;
+    document.getElementById("card4-text").textContent = t.card4Text;
+    document.querySelector(".lang-dropdown").classList.remove("open");
+}
+
+setLanguage(currentLang);
+</script>
+</body>
+</html>

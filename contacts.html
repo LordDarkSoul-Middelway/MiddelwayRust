@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Контакты — Middelway Rust</title>
+<link rel="stylesheet" href="style.css" />
+<style>
+.hero { height: 40vh; display: flex; justify-content: center; align-items: center; margin-top: 80px; }
+.header-right { display: flex; align-items: center; gap: 10px; }
+.contacts { max-width: 900px; margin: 40px auto; padding: 20px; background: rgba(60,0,90,0.25); border-radius: 20px; backdrop-filter: blur(6px); border: 1px solid rgba(255,0,255,0.3); box-shadow: 0 0 30px #b400ff; }
+.contact-cards { display: flex; justify-content: center; gap: 25px; flex-wrap: wrap; margin-top: 20px; }
+.card { width: 260px; padding: 20px; background: rgba(90,0,120,0.3); border-radius: 15px; border: 1px solid rgba(255,0,255,0.25); text-align: center; box-shadow: 0 0 20px #b400ff; transition: 0.3s; }
+.card:hover { box-shadow: 0 0 35px #ff00ff; transform: translateY(-5px); }
+.card h3 { font-size: 24px; margin-bottom: 10px; text-shadow: 0 0 15px #ff00ff; }
+.card a { font-size: 19px; color: #ffb7ff; text-decoration: none; transition: 0.3s; }
+.card a:hover { color: #ff00ff; text-shadow: 0 0 12px #ff00ff; }
+</style>
+</head>
+<body>
+
+<header class="header">
+    <div class="logo">Middelway</div>
+    <nav id="navMenu">
+        <a href="index.html" id="nav-home">Главная</a>
+        <a href="about.html" id="nav-about">О сервере</a>
+        <a href="rules.html" id="nav-rules">Правила</a>
+        <a href="connect.html" id="nav-connect">Подключение</a>
+        <a href="contacts.html" id="nav-contacts">Контакты</a>
+    </nav>
+    <div class="header-right">
+        <div class="lang-dropdown">
+            <button class="lang-current" onclick="toggleLangMenu()">
+                <span id="current-lang-label">RU</span>
+                <span class="lang-arrow">▼</span>
+            </button>
+            <div class="lang-menu">
+                <button class="lang-option" onclick="setLanguage('ru')">Русский</button>
+                <button class="lang-option" onclick="setLanguage('en')">English</button>
+            </div>
+        </div>
+        <a onclick="playRust()" class="play-btn" id="play-btn-text">Играть</a>
+    </div>
+    <div class="burger" onclick="toggleMenu()">☰</div>
+</header>
+
+<section class="hero">
+    <h1 id="page-title">Контакты</h1>
+</section>
+
+<div class="contacts">
+    <div class="contact-cards">
+        <div class="card">
+            <h3>💬 Discord</h3>
+            <a href="https://discord.gg/vBG5JWapT5" target="_blank">discord.gg/vBG5JWapT5</a>
+        </div>
+        <div class="card">
+            <h3>✈ Telegram</h3>
+            <a href="https://t.me/Middelway" target="_blank">@Middelway</a>
+        </div>
+    </div>
+</div>
+
+<script>
+function toggleMenu() {
+    const menu = document.getElementById("navMenu");
+    menu.style.display = menu.style.display === "flex" ? "none" : "flex";
+}
+function playRust() {
+    window.location.href = "steam://run/252490//+connect%20195.60.166.169:28015";
+}
+function toggleLangMenu() {
+    document.querySelector(".lang-dropdown").classList.toggle("open");
+}
+document.addEventListener("click", function (e) {
+    const dropdown = document.querySelector(".lang-dropdown");
+    if (dropdown && !dropdown.contains(e.target)) dropdown.classList.remove("open");
+});
+
+const translations = {
+    ru: {
+        currentLang: "RU", playBtn: "Играть",
+        navHome: "Главная", navAbout: "О сервере", navRules: "Правила", navConnect: "Подключение", navContacts: "Контакты",
+        pageTitle: "Контакты"
+    },
+    en: {
+        currentLang: "EN", playBtn: "Play",
+        navHome: "Home", navAbout: "About", navRules: "Rules", navConnect: "Connect", navContacts: "Contacts",
+        pageTitle: "Contacts"
+    }
+};
+
+let currentLang = localStorage.getItem("site-lang") || "ru";
+
+function setLanguage(lang) {
+    currentLang = lang;
+    localStorage.setItem("site-lang", lang);
+    const t = translations[lang];
+    document.getElementById("current-lang-label").textContent = t.currentLang;
+    document.getElementById("play-btn-text").textContent = t.playBtn;
+    document.getElementById("nav-home").textContent = t.navHome;
+    document.getElementById("nav-about").textContent = t.navAbout;
+    document.getElementById("nav-rules").textContent = t.navRules;
+    document.getElementById("nav-connect").textContent = t.navConnect;
+    document.getElementById("nav-contacts").textContent = t.navContacts;
+    document.getElementById("page-title").textContent = t.pageTitle;
+    document.querySelector(".lang-dropdown").classList.remove("open");
+}
+
+setLanguage(currentLang);
+</script>
+</body>
+</html>

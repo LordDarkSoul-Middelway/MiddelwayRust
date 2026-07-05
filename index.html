@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Middelway Rust Server</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<header class="header">
+  <div class="logo glow">Middelway</div>
+
+  <nav id="navMenu">
+    <a href="index.html" id="nav-home">Главная</a>
+    <a href="about.html" id="nav-about">О сервере</a>
+    <a href="rules.html" id="nav-rules">Правила</a>
+    <a href="connect.html" id="nav-connect">Подключение</a>
+    <a href="contacts.html" id="nav-contacts">Контакты</a>
+  </nav>
+
+  <a onclick="playRust()" class="play-btn" id="play-btn-text">Играть</a>
+
+  <div class="lang-dropdown">
+    <button class="lang-current" onclick="toggleLangMenu()">
+      <span id="current-lang-label">RU</span>
+      <span class="lang-arrow">▼</span>
+    </button>
+
+    <div class="lang-menu" id="lang-menu">
+      <button class="lang-option" onclick="setLanguage('ru')">Русский</button>
+      <button class="lang-option" onclick="setLanguage('en')">English</button>
+    </div>
+  </div>
+
+  <div class="burger" onclick="toggleMenu()">☰</div>
+</header>
+
+<section class="server-info">
+    <div class="info-line">
+        <span class="info-title" id="wipe-title">Вайп:</span>
+        <span class="info-value" id="wipe-value">Каждую пятницу</span>
+    </div>
+
+    <div class="info-line">
+        <span class="info-title" id="next-wipe-title">Следующий вайп:</span>
+        <span class="info-value" id="wipe-timer">Загрузка...</span>
+    </div>
+
+    <div class="info-line">
+        <span class="info-title" id="rate-title">Рейт:</span>
+        <span class="info-value">x2</span>
+    </div>
+
+    <div class="info-line">
+        <span class="info-title" id="map-title">Карта:</span>
+        <span class="info-value">Procedural 3500</span>
+    </div>
+</section>
+
+<section class="news-section">
+    <h2 id="news-title">Новости сервера</h2>
+
+    <div class="news-container">
+
+        <div class="news-card">
+            <h3 id="news1-title">🔥 Последний вайп</h3>
+            <p id="news1-text">
+                На сервере прошёл свежий вайп. Игроков ждёт новый старт, обновлённая карта и честная борьба с первых минут.
+            </p>
+        </div>
+
+        <div class="news-card">
+            <h3 id="news2-title">⚡ Обновления Middelway</h3>
+            <p id="news2-text">
+                Мы продолжаем улучшать стабильность сервера, баланс и удобство игры. Следи за новостями, чтобы ничего не пропустить.
+            </p>
+        </div>
+
+        <div class="news-card">
+            <h3 id="news3-title">📢 Важно</h3>
+            <p id="news3-text">
+                Не забывай читать правила сервера и заходить в Discord, чтобы быть в курсе всех изменений, ивентов и объявлений.
+            </p>
+        </div>
+
+    </div>
+</section>
+
+<section class="donate-goal">
+    <h2 id="donate-title">Поддержка сервера</h2>
+
+    <div class="donate-card">
+        <div class="donate-text">
+            <span id="donate-current">100</span> ₽ <span id="donate-from-text">из</span>
+            <span id="donate-goal">1000</span> ₽
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progress-fill"></div>
+        </div>
+
+        <div class="progress-percent" id="progress-percent">0%</div>
+    </div>
+</section>
+
+<div class="top-sidebar" id="top-sidebar">
+    <button class="top-sidebar-toggle" id="top-sidebar-toggle" onclick="toggleTopSidebar()" title="Скрыть">‹</button>
+    <div class="top-sidebar-inner" id="top-sidebar-inner">
+        <div class="top-sidebar-header">
+            <span class="top-sidebar-icon" id="top-sidebar-icon">⛏️</span>
+            <span class="top-sidebar-title" id="top-sidebar-title">Топ по фарму</span>
+        </div>
+        <div class="top-sidebar-dots">
+            <span class="top-dot active" data-i="0"></span>
+            <span class="top-dot" data-i="1"></span>
+            <span class="top-dot" data-i="2"></span>
+        </div>
+        <ul class="top-sidebar-list" id="top-sidebar-list"></ul>
+        <div class="top-sidebar-bar" id="top-sidebar-bar"></div>
+    </div>
+</div>
+
+<section id="home" class="hero">
+  <div class="hero-overlay"></div>
+</section>
+
+<script>
+function toggleMenu() {
+    const menu = document.getElementById("navMenu");
+    menu.style.display = menu.style.display === "flex" ? "none" : "flex";
+}
+
+/* ФУНКЦИЯ ПОДКЛЮЧЕНИЯ К RUST */
+function playRust() {
+    window.location.href = "steam://run/252490//+connect%20195.60.166.169:28015";
+}
+
+/* ВЫПАДАЮЩЕЕ МЕНЮ ЯЗЫКА */
+function toggleLangMenu() {
+    document.querySelector(".lang-dropdown").classList.toggle("open");
+}
+
+document.addEventListener("click", function (e) {
+    const dropdown = document.querySelector(".lang-dropdown");
+    if (dropdown && !dropdown.contains(e.target)) {
+        dropdown.classList.remove("open");
+    }
+});
+
+/* АВТОМАТИЧЕСКИЙ ВАЙП КАЖДУЮ ПЯТНИЦУ */
+function getNextWipeDate() {
+    const now = new Date();
+
+    const wipeDay = 5;
+    const wipeHour = 15;
+    const wipeMinute = 0;
+    const wipeSecond = 0;
+
+    let next = new Date(now);
+    let daysUntil = wipeDay - now.getDay();
+
+    if (daysUntil < 0) {
+        daysUntil += 7;
+    }
+
+    next.setDate(now.getDate() + daysUntil);
+    next.setHours(wipeHour, wipeMinute, wipeSecond, 0);
+
+    if (next <= now) {
+        next.setDate(next.getDate() + 7);
+    }
+
+    return next;
+}
+
+function updateWipeTimer() {
+    const wipeTimerEl = document.getElementById("wipe-timer");
+    const now = new Date();
+    const nextWipe = getNextWipeDate();
+    const diff = nextWipe - now;
+
+    if (diff <= 0) {
+        wipeTimerEl.textContent = currentLang === "ru" ? "Вайп!" : "Wipe!";
+        return;
+    }
+
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const minutes = Math.floor((diff / (1000 * 60)) % 60);
+    const seconds = Math.floor((diff / (1000) % 60));
+
+    if (days >= 1) {
+        wipeTimerEl.textContent = currentLang === "ru"
+            ? `${days} дн.`
+            : `${days} d.`;
+    } else {
+        wipeTimerEl.textContent = currentLang === "ru"
+            ? `${hours}ч ${minutes}м ${seconds}с`
+            : `${hours}h ${minutes}m ${seconds}s`;
+    }
+}
+
+/* ТОП САЙДБАР — данные */
+const topData = {
+    ru: {
+        categories: [
+            {
+                icon: "⛏️",
+                title: "Топ по фарму",
+                items: [
+                    "Hentai — 1М ресурсов",
+                    "WoodMan — 850k ресурсов",
+                    "Farmlord — 780k ресурсов",
+                    "StoneKing — 640k ресурсов",
+                    "OreGod — 590k ресурсов",
+                    "TreeCutter — 520k ресурсов",
+                    "GrindMaster — 480k ресурсов",
+                    "MetalHead — 410k ресурсов",
+                    "SulfurBoy — 370k ресурсов",
+                    "Digger — 310k ресурсов"
+                ]
+            },
+            {
+                icon: "⚔️",
+                title: "Топ по убийствам",
+                items: [
+                    "Shadow — 152 убийства",
+                    "Rager — 140 убийств",
+                    "DEDINSIDE — 118 убийств",
+                    "Psycho — 104 убийства",
+                    "NightKiller — 97 убийств",
+                    "BloodyAce — 89 убийств",
+                    "Sniper1337 — 81 убийство",
+                    "HunterX — 74 убийства",
+                    "DarkWolf — 66 убийств",
+                    "SilentOne — 58 убийств"
+                ]
+            },
+            {
+                icon: "💣",
+                title: "Топ по взрывам",
+                items: [
+                    "BoomMaster — 22 рейда",
+                    "C4King — 19 рейдов",
+                    "RAIDR — 17 рейдов",
+                    "Destructor — 15 рейдов",
+                    "RocketMan — 13 рейдов",
+                    "BangBang — 11 рейдов",
+                    "Blaster — 10 рейдов",
+                    "ExplosiveX — 9 рейдов",
+                    "TNTguy — 7 рейдов",
+                    "CrashBandicoot — 6 рейдов"
+                ]
+            }
+        ]
+    },
+    en: {
+        categories: [
+            {
+                icon: "⛏️",
+                title: "Top Farming",
+                items: [
+                    "Hentai — 1M resources",
+                    "WoodMan — 850k resources",
+                    "Farmlord — 780k resources",
+                    "StoneKing — 640k resources",
+                    "OreGod — 590k resources",
+                    "TreeCutter — 520k resources",
+                    "GrindMaster — 480k resources",
+                    "MetalHead — 410k resources",
+                    "SulfurBoy — 370k resources",
+                    "Digger — 310k resources"
+                ]
+            },
+            {
+                icon: "⚔️",
+                title: "Top Kills",
+                items: [
+                    "Shadow — 152 kills",
+                    "Rager — 140 kills",
+                    "DEDINSIDE — 118 kills",
+                    "Psycho — 104 kills",
+                    "NightKiller — 97 kills",
+                    "BloodyAce — 89 kills",
+                    "Sniper1337 — 81 kills",
+                    "HunterX — 74 kills",
+                    "DarkWolf — 66 kills",
+                    "SilentOne — 58 kills"
+                ]
+            },
+            {
+                icon: "💣",
+                title: "Top Raids",
+                items: [
+                    "BoomMaster — 22 raids",
+                    "C4King — 19 raids",
+                    "RAIDR — 17 raids",
+                    "Destructor — 15 raids",
+                    "RocketMan — 13 raids",
+                    "BangBang — 11 raids",
+                    "Blaster — 10 raids",
+                    "ExplosiveX — 9 raids",
+                    "TNTguy — 7 raids",
+                    "CrashBandicoot — 6 raids"
+                ]
+            }
+        ]
+    }
+};
+
+let topIndex = 0;
+let topTimer = null;
+
+function renderTopSidebar(index, lang) {
+    const cats = topData[lang].categories;
+    const cat = cats[index];
+    const list = document.getElementById("top-sidebar-list");
+    const title = document.getElementById("top-sidebar-title");
+    const icon = document.getElementById("top-sidebar-icon");
+    const bar = document.getElementById("top-sidebar-bar");
+    const dots = document.querySelectorAll(".top-dot");
+
+    // fade out
+    list.style.opacity = "0";
+    list.style.transform = "translateY(10px)";
+
+    setTimeout(() => {
+        icon.textContent = cat.icon;
+        title.textContent = cat.title;
+        list.innerHTML = cat.items.map((item, i) =>
+            `<li><span class="top-num">${i + 1}</span>${item}</li>`
+        ).join("");
+
+        dots.forEach((d, i) => d.classList.toggle("active", i === index));
+
+        // reset & animate progress bar
+        bar.style.transition = "none";
+        bar.style.width = "0%";
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+                bar.style.transition = "width 30s linear";
+                bar.style.width = "100%";
+            });
+        });
+
+        list.style.opacity = "1";
+        list.style.transform = "translateY(0)";
+    }, 250);
+}
+
+function toggleTopSidebar() {
+    const sidebar = document.getElementById("top-sidebar");
+    const btn = document.getElementById("top-sidebar-toggle");
+    const hidden = sidebar.classList.toggle("hidden");
+    btn.textContent = hidden ? "›" : "‹";
+    btn.title = hidden ? (currentLang === "ru" ? "Показать" : "Show") : (currentLang === "ru" ? "Скрыть" : "Hide");
+}
+
+function startTopRotation() {
+    renderTopSidebar(topIndex, currentLang);
+    if (topTimer) clearInterval(topTimer);
+    topTimer = setInterval(() => {
+        topIndex = (topIndex + 1) % 3;
+        renderTopSidebar(topIndex, currentLang);
+    }, 30000);
+}
+
+/* СКРЫТЬ / ПОКАЗАТЬ САЙДБАР */
+let sidebarHidden = false;
+
+function toggleTopSidebar() {
+    const sidebar = document.getElementById("top-sidebar");
+    const btn = document.getElementById("top-sidebar-toggle");
+    sidebarHidden = !sidebarHidden;
+    sidebar.classList.toggle("collapsed", sidebarHidden);
+    btn.textContent = sidebarHidden ? "›" : "‹";
+    localStorage.setItem("top-sidebar-hidden", sidebarHidden ? "1" : "0");
+}
+
+// Восстановить состояние при загрузке
+if (localStorage.getItem("top-sidebar-hidden") === "1") {
+    toggleTopSidebar();
+}
+
+// Клик по точкам для ручного переключения
+document.querySelectorAll(".top-dot").forEach(dot => {
+    dot.addEventListener("click", () => {
+        topIndex = parseInt(dot.dataset.i);
+        clearInterval(topTimer);
+        renderTopSidebar(topIndex, currentLang);
+        topTimer = setInterval(() => {
+            topIndex = (topIndex + 1) % 3;
+            renderTopSidebar(topIndex, currentLang);
+        }, 30000);
+    });
+});
+
+function loadTopStats() {
+    renderTopSidebar(topIndex, currentLang);
+}
+
+/* ПРОГРЕСС ПОДДЕРЖКИ */
+function updateDonateProgress(current, goal) {
+    const currentEl = document.getElementById("donate-current");
+    const goalEl = document.getElementById("donate-goal");
+    const fillEl = document.getElementById("progress-fill");
+    const percentEl = document.getElementById("progress-percent");
+
+    const percent = Math.min((current / goal) * 100, 100);
+
+    currentEl.textContent = current;
+    goalEl.textContent = goal;
+    fillEl.style.width = percent + "%";
+    percentEl.textContent = Math.round(percent) + "%";
+}
+
+/* ПЕРЕВОДЫ */
+const translations = {
+    ru: {
+        currentLang: "RU",
+        navHome: "Главная",
+        navAbout: "О сервере",
+        navRules: "Правила",
+        navConnect: "Подключение",
+        navContacts: "Контакты",
+        playBtn: "Играть",
+
+        wipeTitle: "Вайп:",
+        wipeValue: "Каждую пятницу",
+        nextWipeTitle: "Следующий вайп:",
+        rateTitle: "Рейт:",
+        mapTitle: "Карта:",
+
+        newsTitle: "Новости сервера",
+        donateTitle: "Поддержка сервера",
+        donateFromText: "из",
+        topTitle: "Топ игроков",
+
+        news1Title: "🔥 Последний вайп",
+        news1Text: "На сервере прошёл свежий вайп. Игроков ждёт новый старт, обновлённая карта и честная борьба с первых минут.",
+
+        news2Title: "⚡ Обновления Middelway",
+        news2Text: "Мы продолжаем улучшать стабильность сервера, баланс и удобство игры. Следи за новостями, чтобы ничего не пропустить.",
+
+        news3Title: "📢 Важно",
+        news3Text: "Не забывай читать правила сервера и заходить в Discord, чтобы быть в курсе всех изменений, ивентов и объявлений.",
+
+        topKillsTitle: "⚔️ Топ по киллам",
+        topFarmTitle: "⛏️ Топ по фарму",
+        topRaidsTitle: "💣 Топ по рейдам"
+    },
+
+    en: {
+        currentLang: "EN",
+        navHome: "Home",
+        navAbout: "About",
+        navRules: "Rules",
+        navConnect: "Connect",
+        navContacts: "Contacts",
+        playBtn: "Play",
+
+        wipeTitle: "Wipe:",
+        wipeValue: "Every Friday",
+        nextWipeTitle: "Next wipe:",
+        rateTitle: "Rate:",
+        mapTitle: "Map:",
+
+        newsTitle: "Server News",
+        donateTitle: "Server Support",
+        donateFromText: "of",
+        topTitle: "Top Players",
+
+        news1Title: "🔥 Latest Wipe",
+        news1Text: "A fresh wipe has started on the server. Players can enjoy a new beginning, an updated map, and a fair start from the first minutes.",
+
+        news2Title: "⚡ Middelway Updates",
+        news2Text: "We continue improving server stability, balance, and overall gameplay comfort. Stay tuned so you do not miss anything.",
+
+        news3Title: "📢 Important",
+        news3Text: "Do not forget to read the server rules and join Discord to stay informed about all changes, events, and announcements.",
+
+        topKillsTitle: "⚔️ Top Kills",
+        topFarmTitle: "⛏️ Top Farming",
+        topRaidsTitle: "💣 Top Raids"
+    }
+};
+
+let currentLang = "ru";
+
+function setLanguage(lang) {
+    currentLang = lang;
+    localStorage.setItem("site-lang", lang);
+
+    document.documentElement.lang = lang;
+
+    document.getElementById("current-lang-label").textContent = translations[lang].currentLang;
+
+    document.getElementById("nav-home").textContent = translations[lang].navHome;
+    document.getElementById("nav-about").textContent = translations[lang].navAbout;
+    document.getElementById("nav-rules").textContent = translations[lang].navRules;
+    document.getElementById("nav-connect").textContent = translations[lang].navConnect;
+    document.getElementById("nav-contacts").textContent = translations[lang].navContacts;
+    document.getElementById("play-btn-text").textContent = translations[lang].playBtn;
+
+    document.getElementById("wipe-title").textContent = translations[lang].wipeTitle;
+    document.getElementById("wipe-value").textContent = translations[lang].wipeValue;
+    document.getElementById("next-wipe-title").textContent = translations[lang].nextWipeTitle;
+    document.getElementById("rate-title").textContent = translations[lang].rateTitle;
+    document.getElementById("map-title").textContent = translations[lang].mapTitle;
+
+    document.getElementById("news-title").textContent = translations[lang].newsTitle;
+    document.getElementById("donate-title").textContent = translations[lang].donateTitle;
+    document.getElementById("donate-from-text").textContent = translations[lang].donateFromText;
+    document.getElementById("top-title").textContent = translations[lang].topTitle;
+
+    document.getElementById("news1-title").textContent = translations[lang].news1Title;
+    document.getElementById("news1-text").textContent = translations[lang].news1Text;
+
+    document.getElementById("news2-title").textContent = translations[lang].news2Title;
+    document.getElementById("news2-text").textContent = translations[lang].news2Text;
+
+    document.getElementById("news3-title").textContent = translations[lang].news3Title;
+    document.getElementById("news3-text").textContent = translations[lang].news3Text;
+
+    renderTopSidebar(topIndex, lang);
+    loadTopStats();
+    updateWipeTimer();
+
+    document.querySelector(".lang-dropdown").classList.remove("open");
+}
+
+const savedLang = localStorage.getItem("site-lang") || "ru";
+setLanguage(savedLang);
+
+startTopRotation();
+updateWipeTimer();
+setInterval(updateWipeTimer, 1000);
+
+/* Тут меняешь суммы */
+updateDonateProgress(1000, 100000);
+</script>
+
+</body>
+</html>

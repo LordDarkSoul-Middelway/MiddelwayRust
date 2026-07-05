@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Подключение — Middelway Rust</title>
+<link rel="stylesheet" href="style.css" />
+
+<style>
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.connect-hero {
+    padding-top: 60px;
+}
+.big-server-card {
+    margin-top: 25px;
+    padding: 25px 35px;
+    background: rgba(60, 0, 90, 0.3);
+    border-radius: 18px;
+    border: 1px solid rgba(255,0,255,0.35);
+    box-shadow: 0 0 30px #b400ff;
+    backdrop-filter: blur(6px);
+    font-size: 20px;
+    line-height: 2;
+}
+.big-server-card h3 {
+    font-size: 26px;
+    margin-bottom: 10px;
+    text-shadow: 0 0 15px #ff00ff;
+}
+</style>
+</head>
+<body>
+
+<header class="header">
+    <div class="logo glow">Middelway</div>
+
+    <nav id="navMenu">
+        <a href="index.html" id="nav-home">Главная</a>
+        <a href="about.html" id="nav-about">О сервере</a>
+        <a href="rules.html" id="nav-rules">Правила</a>
+        <a href="connect.html" id="nav-connect" class="active">Подключение</a>
+        <a href="contacts.html" id="nav-contacts">Контакты</a>
+    </nav>
+
+    <div class="header-right">
+        <div class="lang-dropdown">
+            <button class="lang-current" onclick="toggleLangMenu()">
+                <span id="current-lang-label">RU</span>
+                <span class="lang-arrow">▼</span>
+            </button>
+            <div class="lang-menu" id="lang-menu">
+                <button class="lang-option" onclick="setLanguage('ru')">Русский</button>
+                <button class="lang-option" onclick="setLanguage('en')">English</button>
+            </div>
+        </div>
+        <a onclick="playRust()" class="play-btn" id="play-btn-text">Играть</a>
+    </div>
+
+    <div class="burger" onclick="toggleMenu()">☰</div>
+</header>
+
+<section class="hero connect-hero">
+    <h1 id="page-title">Статус сервера</h1>
+    <p class="sub" id="page-sub">Активность Rust сервера Middelway в реальном времени</p>
+
+    <div class="big-server-card">
+        <h3 id="card-title">Информация о сервере:</h3>
+        <p><strong id="label-status">Статус:</strong> <span id="server-status">Загрузка...</span></p>
+        <p><strong id="label-players">Игроков онлайн:</strong> <span id="server-players">—</span></p>
+    </div>
+</section>
+
+<script>
+function toggleMenu() {
+    const menu = document.getElementById("navMenu");
+    menu.style.display = menu.style.display === "flex" ? "none" : "flex";
+}
+
+function playRust() {
+    window.location = "steam://run/252490//+connect%20195.60.166.169:28015";
+}
+
+function toggleLangMenu() {
+    document.querySelector(".lang-dropdown").classList.toggle("open");
+}
+
+document.addEventListener("click", function (e) {
+    const dropdown = document.querySelector(".lang-dropdown");
+    if (dropdown && !dropdown.contains(e.target)) dropdown.classList.remove("open");
+});
+
+const translations = {
+    ru: {
+        currentLang: "RU",
+        playBtn: "Играть",
+        navHome: "Главная", navAbout: "О сервере", navRules: "Правила", navConnect: "Подключение", navContacts: "Контакты",
+        pageTitle: "Статус сервера",
+        pageSub: "Активность Rust сервера Middelway в реальном времени",
+        cardTitle: "Информация о сервере:",
+        labelStatus: "Статус:", labelPlayers: "Игроков онлайн:",
+        statusLoading: "Загрузка...",
+        statusOnline: "Онлайн ✔", statusOffline: "Выключен ✖",
+        statusRestarting: "Перезагрузка...", statusError: "Не подключён"
+    },
+    en: {
+        currentLang: "EN",
+        playBtn: "Play",
+        navHome: "Home", navAbout: "About", navRules: "Rules", navConnect: "Connect", navContacts: "Contacts",
+        pageTitle: "Server Status",
+        pageSub: "Real-time activity of the Middelway Rust server",
+        cardTitle: "Server Information:",
+        labelStatus: "Status:", labelPlayers: "Players online:",
+        statusLoading: "Loading...",
+        statusOnline: "Online ✔", statusOffline: "Offline ✖",
+        statusRestarting: "Restarting...", statusError: "Not connected"
+    }
+};
+
+let currentLang = localStorage.getItem("site-lang") || "ru";
+
+function setLanguage(lang) {
+    currentLang = lang;
+    localStorage.setItem("site-lang", lang);
+    const t = translations[lang];
+
+    document.getElementById("current-lang-label").textContent = t.currentLang;
+    document.getElementById("play-btn-text").textContent = t.playBtn;
+    document.getElementById("nav-home").textContent = t.navHome;
+    document.getElementById("nav-about").textContent = t.navAbout;
+    document.getElementById("nav-rules").textContent = t.navRules;
+    document.getElementById("nav-connect").textContent = t.navConnect;
+    document.getElementById("nav-contacts").textContent = t.navContacts;
+    document.getElementById("page-title").textContent = t.pageTitle;
+    document.getElementById("page-sub").textContent = t.pageSub;
+    document.getElementById("card-title").textContent = t.cardTitle;
+    document.getElementById("label-status").textContent = t.labelStatus;
+    document.getElementById("label-players").textContent = t.labelPlayers;
+
+    document.querySelector(".lang-dropdown").classList.remove("open");
+}
+
+// BattleMetrics API
+const SERVER_ID = "6803740";
+
+async function loadServerStatus() {
+    const statusEl = document.getElementById("server-status");
+    const playersEl = document.getElementById("server-players");
+    const t = translations[currentLang];
+
+    try {
+        const response = await fetch(`https://api.battlemetrics.com/servers/${SERVER_ID}`);
+        if (!response.ok) throw new Error("HTTP " + response.status);
+
+        const json = await response.json();
+        const data = json.data.attributes;
+
+        if (data.status === "online") {
+            statusEl.textContent = t.statusOnline;
+            statusEl.style.color = "#00ff88";
+        } else if (data.status === "dead") {
+            statusEl.textContent = t.statusOffline;
+            statusEl.style.color = "#ff4444";
+        } else {
+            statusEl.textContent = t.statusRestarting;
+            statusEl.style.color = "#ffaa00";
+        }
+
+        playersEl.textContent = `${data.players} / ${data.maxPlayers}`;
+
+    } catch (err) {
+        statusEl.textContent = t.statusError;
+        statusEl.style.color = "#ffcc00";
+        playersEl.textContent = "—";
+    }
+}
+
+// Запуск после загрузки DOM
+setLanguage(currentLang);
+loadServerStatus();
+setInterval(loadServerStatus, 1000);
+</script>
+
+</body>
+</html>

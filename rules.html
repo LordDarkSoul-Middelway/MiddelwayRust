@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Правила — Middelway Rust</title>
+<link rel="stylesheet" href="style.css" />
+<style>
+.hero-small { height: 40vh; }
+.header-right { display: flex; align-items: center; gap: 10px; }
+.rule-block {
+    max-width: 900px; margin: 40px auto; padding: 25px;
+    background: rgba(60,0,90,0.25); backdrop-filter: blur(6px);
+    border-radius: 20px; border: 1px solid rgba(255,0,255,0.35);
+    box-shadow: 0 0 30px #b400ff;
+}
+.rule-block h2 { font-size: 32px; margin-bottom: 15px; text-shadow: 0 0 18px #ff00ff; }
+.rule-block ul { list-style: none; margin-bottom: 25px; }
+.rule-block li { font-size: 18px; margin-bottom: 12px; padding-left: 10px; border-left: 3px solid #ff00ff; }
+</style>
+</head>
+<body>
+
+<header class="header">
+    <div class="logo">Middelway</div>
+    <nav id="navMenu">
+        <a href="index.html" id="nav-home">Главная</a>
+        <a href="about.html" id="nav-about">О сервере</a>
+        <a href="rules.html" id="nav-rules">Правила</a>
+        <a href="connect.html" id="nav-connect">Подключение</a>
+        <a href="contacts.html" id="nav-contacts">Контакты</a>
+    </nav>
+    <div class="header-right">
+        <div class="lang-dropdown">
+            <button class="lang-current" onclick="toggleLangMenu()">
+                <span id="current-lang-label">RU</span>
+                <span class="lang-arrow">▼</span>
+            </button>
+            <div class="lang-menu">
+                <button class="lang-option" onclick="setLanguage('ru')">Русский</button>
+                <button class="lang-option" onclick="setLanguage('en')">English</button>
+            </div>
+        </div>
+        <a onclick="playRust()" class="play-btn" id="play-btn-text">Играть</a>
+    </div>
+    <div class="burger" onclick="toggleMenu()">☰</div>
+</header>
+
+<section class="hero hero-small">
+    <h1 id="page-title">Правила сервера</h1>
+</section>
+
+<div class="rule-block">
+    <h2 id="rule1-title">1. Общие правила</h2>
+    <ul id="rule1-list">
+        <li>Запрещены читы, макросы, софт и любые программы, дающие преимущество.</li>
+        <li>Запрещено использование багов игры.</li>
+        <li>Уважайте других игроков и администрацию.</li>
+        <li>Запрещена реклама сторонних серверов.</li>
+    </ul>
+    <h2 id="rule2-title">2. Правила поведения</h2>
+    <ul id="rule2-list">
+        <li>Оскорбления запрещены (лёгкий трешток допускается).</li>
+        <li>Запрещён спам и флуд в чате.</li>
+        <li>Запрещено выдавать себя за администрацию.</li>
+    </ul>
+    <h2 id="rule3-title">3. Игровые правила</h2>
+    <ul id="rule3-list">
+        <li>Запрещено специально мешать развитию союзников.</li>
+        <li>Запрещено строить блокирующие конструкции у чужих баз без цели рейда.</li>
+        <li>Запрещён тим-размер более 3 человек (3+).</li>
+    </ul>
+    <h2 id="rule4-title">4. Наказания</h2>
+    <ul id="rule4-list">
+        <li>Администрация имеет право выдавать наказания по своему усмотрению.</li>
+        <li>Попытка обхода бана → перманентный бан.</li>
+        <li>Мультиаккаунты для обхода ограничений — запрещены.</li>
+    </ul>
+</div>
+
+<script>
+function toggleMenu() {
+    const menu = document.getElementById("navMenu");
+    menu.style.display = menu.style.display === "flex" ? "none" : "flex";
+}
+function playRust() {
+    window.location.href = "steam://run/252490//+connect%20195.60.166.169:28015";
+}
+function toggleLangMenu() {
+    document.querySelector(".lang-dropdown").classList.toggle("open");
+}
+document.addEventListener("click", function (e) {
+    const dropdown = document.querySelector(".lang-dropdown");
+    if (dropdown && !dropdown.contains(e.target)) dropdown.classList.remove("open");
+});
+
+const translations = {
+    ru: {
+        currentLang: "RU", playBtn: "Играть",
+        navHome: "Главная", navAbout: "О сервере", navRules: "Правила", navConnect: "Подключение", navContacts: "Контакты",
+        pageTitle: "Правила сервера",
+        rule1Title: "1. Общие правила",
+        rule1items: ["Запрещены читы, макросы, софт и любые программы, дающие преимущество.", "Запрещено использование багов игры.", "Уважайте других игроков и администрацию.", "Запрещена реклама сторонних серверов."],
+        rule2Title: "2. Правила поведения",
+        rule2items: ["Оскорбления запрещены (лёгкий трешток допускается).", "Запрещён спам и флуд в чате.", "Запрещено выдавать себя за администрацию."],
+        rule3Title: "3. Игровые правила",
+        rule3items: ["Запрещено специально мешать развитию союзников.", "Запрещено строить блокирующие конструкции у чужих баз без цели рейда.", "Запрещён тим-размер более 3 человек (3+)."],
+        rule4Title: "4. Наказания",
+        rule4items: ["Администрация имеет право выдавать наказания по своему усмотрению.", "Попытка обхода бана → перманентный бан.", "Мультиаккаунты для обхода ограничений — запрещены."]
+    },
+    en: {
+        currentLang: "EN", playBtn: "Play",
+        navHome: "Home", navAbout: "About", navRules: "Rules", navConnect: "Connect", navContacts: "Contacts",
+        pageTitle: "Server Rules",
+        rule1Title: "1. General Rules",
+        rule1items: ["Cheats, macros, software, and any programs providing an advantage are prohibited.", "Exploiting game bugs is prohibited.", "Respect other players and the administration.", "Advertising third-party servers is prohibited."],
+        rule2Title: "2. Conduct Rules",
+        rule2items: ["Insults are prohibited (light trash talk is allowed).", "Spam and flooding the chat are prohibited.", "Impersonating administration is prohibited."],
+        rule3Title: "3. Gameplay Rules",
+        rule3items: ["Intentionally hindering allies' development is prohibited.", "Building blocking structures near others' bases without raiding intent is prohibited.", "Team size larger than 3 players (3+) is prohibited."],
+        rule4Title: "4. Punishments",
+        rule4items: ["The administration reserves the right to issue punishments at their discretion.", "Attempting to bypass a ban → permanent ban.", "Multi-accounts used to bypass restrictions are prohibited."]
+    }
+};
+
+let currentLang = localStorage.getItem("site-lang") || "ru";
+
+function setLanguage(lang) {
+    currentLang = lang;
+    localStorage.setItem("site-lang", lang);
+    const t = translations[lang];
+    document.getElementById("current-lang-label").textContent = t.currentLang;
+    document.getElementById("play-btn-text").textContent = t.playBtn;
+    document.getElementById("nav-home").textContent = t.navHome;
+    document.getElementById("nav-about").textContent = t.navAbout;
+    document.getElementById("nav-rules").textContent = t.navRules;
+    document.getElementById("nav-connect").textContent = t.navConnect;
+    document.getElementById("nav-contacts").textContent = t.navContacts;
+    document.getElementById("page-title").textContent = t.pageTitle;
+    for (let i = 1; i <= 4; i++) {
+        document.getElementById("rule" + i + "-title").textContent = t["rule" + i + "Title"];
+        document.getElementById("rule" + i + "-list").innerHTML = t["rule" + i + "items"].map(item => `<li>${item}</li>`).join("");
+    }
+    document.querySelector(".lang-dropdown").classList.remove("open");
+}
+
+setLanguage(currentLang);
+</script>
+</body>
+</html>
